@@ -3,8 +3,9 @@ import {
     createEvent,
     deleteEventById,
     getAllEvent,
-    getEventById, updateEventById
+    getEventById, updateEventById, updateEventStaff, updateEventStaffJoin
 } from "../controllers/eventController.js";
+import {generateQRCode, generateQRCodeImage} from "../controllers/qrcodeController.js";
 // import {deleteUserById} from "../controllers/userController.js";
 // import { createUser, deleteUserById, getAllUser, getUserById, updateUesrById } from '../controllers/userController.js';
 // import { handleValidation } from '../middlewares/index.js';
@@ -20,5 +21,9 @@ eventRoute.post('/',
     createEvent
 )
 eventRoute.patch('/:id', updateEventById)
+eventRoute.patch('/staff/:id', updateEventStaff)
+eventRoute.get('/:id/event_staff/:es_id', updateEventStaffJoin)
+
+eventRoute.post('/get_qrcode', generateQRCodeImage)
 
 export default eventRoute;
