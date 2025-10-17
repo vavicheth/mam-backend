@@ -7,6 +7,7 @@ export const getAllDepartment = asyncHandler(async (req, res) => {
     const search = req.query.search || ''
     const sortBy = req.query.sortBy || 'createdAt'
     const sortOrder = req.query.sortOrder || 'desc'
+    const populate = req.query.populate || ''
 
     // Build sort object
     const sort = {};
@@ -15,7 +16,8 @@ export const getAllDepartment = asyncHandler(async (req, res) => {
     const options = {
         page,
         limit,
-        sort
+        sort,
+        populate,
     };
 
     // Build search filter

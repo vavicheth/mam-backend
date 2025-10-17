@@ -4,11 +4,35 @@ import {Staff} from "../models/staff.model.js";
 export const getAllStaff = asyncHandler(async (req, res) => {
     const limit = req.query.limit || 10
     const page = req.query.page || 1
+    const search = req.query.search || ''
+    const sortBy = req.query.sortBy || 'createdAt'
+    const sortOrder = req.query.sortOrder || 'desc'
+    const populate = req.query.populate || ''
+
+    // Build sort object
+    const sort = {};
+    sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
+
     const options = {
         page,
         limit,
+        sort,
+        populate,
     };
-    let filterStaff = await Staff.paginate({}, options)
+
+    // Build search filter
+    const filter = {};
+    if (search) {
+        filter.$or = [
+            { name_kh: { $regex: search, $options: 'i' } },
+            { name_en: { $regex: search, $options: 'i' } },
+            { gender: { $regex: search, $options: 'i' } },
+            { position: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } }
+        ];
+    }
+
+    let filterStaff = await Staff.paginate(filter, options)
     return res.status(200).json(filterStaff)
 })
 
