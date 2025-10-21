@@ -5,8 +5,17 @@ import jwt from 'jsonwebtoken'
 
 export const login = asyncHandler(async (req, res) => {
     // return res.status(200).send({});
-    const { username, password } = req.body
-    const user = await User.findOne({ username: username })
+    // const { username, password } = req.body
+    // const user = await User.findOne({ username: username })
+
+    const { identifier, password } = req.body;
+
+    console.log("I am logged in");
+    console.log(identifier);
+
+    const user = await User.findOne({
+        $or: [{ email: identifier }, { username: identifier }]
+    });
     if (!user) {
         return res.json({ message: "User not found!" })
     }
@@ -29,7 +38,7 @@ export const login = asyncHandler(async (req, res) => {
     })
 
 
-    return res.json({ accessToken: token, user: payload })
+    return res.json({ token: token, user: payload })
 
     // return res.status(400).json({ message: 'Invalid credential' })
 })

@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import {Staff} from "../models/staff.model.js";
+import mongoose from "mongoose";
 
 export const getAllStaff = asyncHandler(async (req, res) => {
     const limit = req.query.limit || 10
@@ -44,6 +45,60 @@ export const getStaffById = asyncHandler(async (req, res) => {
     }
     return res.json(staff)
 })
+
+// Get students by array of IDs
+export const getStudentsByIds = async (req, res) => {
+    try {
+        // Get student IDs from request body
+        const { ids } = req.body;
+
+        // Validate input
+        if (!ids || !Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide an array of staff IDs'
+            });
+        }
+
+        // Validate that all IDs are valid MongoDB ObjectIds
+        const validIds = ids.filter(id => mongoose.Types.ObjectId.isValid(id));
+
+        if (validIds.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'No valid staff IDs provided'
+            });
+        }
+
+        // Find students with IDs in the array
+        const staffs = await Staff.find({
+            _id: { $in: validIds }
+        });
+
+        // Check if students found
+        if (staffs.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'No students found with provided IDs'
+            });
+        }
+
+        // Return success response
+        return res.status(200).json({
+            success: true,
+            count: staffs.length,
+            data: staffs
+        });
+
+    } catch (error) {
+        console.error('Error fetching staff:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: error.message
+        });
+    }
+};
 
 export const deleteStaffById = asyncHandler(async (req, res) => {
     const staffId = req.params.id

@@ -23,11 +23,11 @@ const eventSchema = new mongoose.Schema({
     },
     event_link: {
         type: String,
-        required: true
+        required: false
     },
     qr_code: {
         type: String,
-        required: true
+        required: false
     },
     event_staff:[{
         staff:{

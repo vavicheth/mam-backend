@@ -3,7 +3,7 @@ import {
     createEvent,
     deleteEventById,
     getAllEvent,
-    getEventById, updateEventById, updateEventStaff, updateEventStaffJoin
+    getEventById, updateEventById, updateEventStaff, updateEventStaffJoin, deleteEventStaff, toggleEventStaffJoin
 } from "../controllers/eventController.js";
 import {generateQRCode, generateQRCodeImage} from "../controllers/qrcodeController.js";
 // import {deleteUserById} from "../controllers/userController.js";
@@ -23,6 +23,8 @@ eventRoute.post('/',
 eventRoute.patch('/:id', updateEventById)
 eventRoute.patch('/staff/:id', updateEventStaff)
 eventRoute.get('/:id/event_staff/:es_id', updateEventStaffJoin)
+eventRoute.get('/:id/event_staff/:es_id/toggle', toggleEventStaffJoin)
+eventRoute.delete('/:id/event_staff/:es_id', deleteEventStaff)
 
 eventRoute.post('/get_qrcode', generateQRCodeImage)
 

@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        required: true
+        required: false
     },
     staff:{
         type: mongoose.Schema.Types.ObjectId,

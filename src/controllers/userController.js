@@ -4,11 +4,34 @@ import asyncHandler from 'express-async-handler'
 export const getAllUser = asyncHandler(async (req, res) => {
     const limit = req.query.limit || 10
     const page = req.query.page || 1
+    const search = req.query.search || ''
+    const sortBy = req.query.sortBy || 'createdAt'
+    const sortOrder = req.query.sortOrder || 'desc'
+    const populate = req.query.populate || ''
+
+    // Build sort object
+    const sort = {};
+    sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
+
+
     const options = {
         page,
         limit,
+        sort,
+        populate,
     };
-    let filterUsers = await User.paginate({}, options)
+    // Build search filter
+    const filter = {};
+    if (search) {
+        filter.$or = [
+            { name: { $regex: search, $options: 'i' } },
+            { username: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } },
+            { role: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } }
+        ];
+    }
+    let filterUsers = await User.paginate(filter, options)
     return res.status(200).json(filterUsers)
 })
 
