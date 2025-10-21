@@ -36,22 +36,22 @@ app.use('/api/auth',
 
 app.use('/api/users',
     // limiter(60 * 1000, 30), // 1 minute, 30 requests
-    // authenticate,
+    authenticate,
     userRoute);
 
 app.use('/api/departments',
     // limiter(60 * 1000, 30), // 1 minute, 30 requests
-    // authenticate,
+    authenticate,
     departmentRoute);
 
 app.use('/api/staff',
     // limiter(60 * 1000, 30), // 1 minute, 30 requests
-    // authenticate,
+    authenticate,
     staffRoute);
 
 app.use('/api/events',
     // limiter(60 * 1000, 30), // 1 minute, 30 requests
-    // authenticate,
+    authenticate,
     eventRoute);
 
 
